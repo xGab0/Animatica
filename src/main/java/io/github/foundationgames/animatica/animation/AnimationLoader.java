@@ -4,6 +4,8 @@ import io.github.foundationgames.animatica.Animatica;
 import io.github.foundationgames.animatica.util.Flags;
 import io.github.foundationgames.animatica.util.Utilities;
 import io.github.foundationgames.animatica.util.exception.PropertyParseException;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.resource.Resource;
@@ -12,12 +14,10 @@ import net.minecraft.util.Identifier;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.function.BiConsumer;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.function.BiConsumer;
 
 public final class AnimationLoader implements SimpleSynchronousResourceReloadListener {
     public static final String[] ANIM_PATHS = {
@@ -29,7 +29,7 @@ public final class AnimationLoader implements SimpleSynchronousResourceReloadLis
 
     public static final AnimationLoader INSTANCE = new AnimationLoader();
 
-    private final Map<Identifier, BakedTextureAnimation> animatedTextures = new HashMap<>();
+    private final Map<Identifier, BakedTextureAnimation> animatedTextures = new Object2ObjectOpenHashMap<>();
 
     private AnimationLoader() {
     }
@@ -59,7 +59,7 @@ public final class AnimationLoader implements SimpleSynchronousResourceReloadLis
         Flags.ALLOW_INVALID_ID_CHARS = true;
 
         this.animatedTextures.clear();
-        var animations = new HashMap<Identifier, List<AnimationMeta>>();
+        var animations = new Object2ObjectOpenHashMap<Identifier, List<AnimationMeta>>();
 
         findAllMCPAnimations(manager, (id, resource) -> {
             try {
@@ -70,7 +70,7 @@ public final class AnimationLoader implements SimpleSynchronousResourceReloadLis
                     var anim = AnimationMeta.of(id, ppt);
 
                     var targetId = anim.target();
-                    if (!animations.containsKey(targetId)) animations.put(targetId, new ArrayList<>());
+                    if (!animations.containsKey(targetId)) animations.put(targetId, new ObjectArrayList<>());
                     animations.get(targetId).add(anim);
                 }
             } catch (IOException | PropertyParseException e) {

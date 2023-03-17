@@ -4,10 +4,10 @@ import io.github.foundationgames.animatica.util.PropertyUtil;
 import io.github.foundationgames.animatica.util.Utilities;
 import io.github.foundationgames.animatica.util.exception.InvalidPropertyException;
 import io.github.foundationgames.animatica.util.exception.PropertyParseException;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
 
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -43,7 +43,7 @@ public record AnimationMeta(
     }
 
     public int getGreatestUsedFrame() {
-        Set<Integer> frames = new HashSet<>(frameMapping.keySet());
+        Set<Integer> frames = new ObjectOpenHashSet<>(frameMapping.keySet());
         frames.addAll(frameDurations.keySet());
 
         int greatestFrame = 0;
